@@ -81,7 +81,7 @@ class MultiplicativeAuction():
         return sum([i[2] for i in answer])*(self.w_max*self.main_epsilon/self.n)
 
 
-# A = MultiplicativeAuction(3, 3, [(0,3,1), (0,4,2), (1,4,2), (1,5,5), (2,5,3)])
+A = MultiplicativeAuction(1, 2, [(0,1,1), (0,2,1)])
 
 
 

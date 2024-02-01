@@ -76,7 +76,7 @@ class TestGenerator:
         m_factor = int(math.sqrt(n1+n2)) * random.randint(1, 15)
         m = int(min(m_factor*(n1+n2), n1*n2, 1e5))
         edge_tmp = random.sample(range(0, n1*n2), m)
-        edge = [(i//n1, (i%n2)+n1) for i in edge_tmp]
+        edge = [(i//n2, (i%n2)+n1) for i in edge_tmp]
         return edge 
 
     @staticmethod
@@ -141,9 +141,9 @@ class TestGenerator:
         return test
 
 
-t = 5
-for test_type in TestType:
-    TestGenerator.generate(test_type, t)
+# t = 5
+# for test_type in TestType:
+#     TestGenerator.generate(test_type, t)
 
 
 
