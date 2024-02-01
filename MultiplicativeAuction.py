@@ -5,11 +5,15 @@ class MultiplicativeAuction():
         self.n1 = n1
         self.n2 = n2
         self.n = n1 + n2  
-        self.edges = edges.copy()
+        self.main_edges = edges.copy()
         self.m = len(edges)
 
     def solve(self, epsilon):
         self.main_epsilon = epsilon
+        self.w_max = max([edge[2] for edge in self.main_edges])
+        self.edges = [edge for edge in self.main_edges if edge[2] >= self.w_max*epsilon/self.n]
+        self.edges = [(i, j, w/(self.w_max*epsilon/self.n)) for (i,j,w) in self.edges]
+
         self.epsilon = 2 / math.ceil(2/(epsilon/2))
 
         self.y = [0] * self.n
@@ -74,85 +78,12 @@ class MultiplicativeAuction():
             if self.matched_to[j] == i and help[j] == w:
                 answer.append((i,j,w))
                 help[j] = -1
-        return answer 
+        return sum([i[2] for i in answer])*(self.w_max*self.main_epsilon/self.n)
 
 
 A = MultiplicativeAuction(3, 3, [(0,3,1), (0,4,2), (1,4,2), (1,5,5), (2,5,3)])
 print(A.solve(0.5))
 exit(0)
-
-n1, n2, m = map(int, input().split())
-epsilon = float(input())
-n = n1 + n2 
-epsilon = 2 / math.floor(2/epsilon)
-edges = []
-
-for _ in range(m):
-    i, j, w = map(int, input().split())
-    edges.append((i, j, w))
-
-y = [0] * n
-match = [-1] * n 
-Q = [[] for i in range(n1)]
-L = []
-util = [0] * m 
-
-def RadixSort(L):
-    mx = max([i[0] for i in L])
-    parts = [[] for i in range(mx+1)]
-    for l in L:
-        parts[l[0]].append(l)
-    ret = []
-    for i in range(mx+1):
-        ret.extend(parts[i])
-    return ret 
-
-def matchr(i):
-        while len(Q[i]) > 0:
-            j, uv_id = Q[i][-1]
-            v_, u_, w_ = edges[uv_id]
-            util[uv_id] = w_ - y[u_]
-            if util[uv_id] < math.pow(1+epsilon, j):
-                Q[i].pop()
-            else:
-                y[u_] += epsilon*w_
-                if match[u_] == -1:
-                    match[u_] = v_
-                    return 
-                else: 
-                    previous = match[u_]
-                    match[u_] = v_
-                    matchr(previous)
-                    return
-        return 
-
-def MultiplicativeAuction():
-    global L, Q
-    for id, (v1, v2, w) in enumerate(edges):
-        max_ratio = round((1-epsilon)/(epsilon/2))
-        for ratio in range(max_ratio+1):
-            j = ratio*(epsilon/2) + epsilon
-            i = math.floor(math.log(j*w, 1+epsilon))
-            L.append((i, id))
-    L = RadixSort(L)
-    for i, edge in L:
-        Q[edges[edge][0]].append((i, edge))
-
-    for i in range(n1):
-        matchr(i)
-
-    answer = []
-    for i, j, w in edges:
-        if match[j] == i:
-            answer.append((i,j,w))
-    print(f'sum:{sum([i[2] for i in answer])}\n')
-    for i in answer:
-        print(f'{i[0]}:{i[1]}')
-
-MultiplicativeAuction()
-
-
-
 
 
 
