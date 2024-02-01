@@ -1,5 +1,6 @@
 class HungarianAlgorithm():
     def __init__(self, n1, n2, edges) -> None:
+        n1, n2, edges = HungarianAlgorithm.get_valid_input(n1, n2, edges)
         self.n1 = n1
         self.n2 = n2
         self.n = n1 + n2  
@@ -9,6 +10,13 @@ class HungarianAlgorithm():
         for e in self.edges:
             self.dist[e[0]][e[1]] = self.dist[e[1]][e[0]] = e[2] 
 
+    @staticmethod
+    def get_valid_input(n1, n2, edges):
+        if n2 <= n1:
+            return n1, n1, edges 
+        else:
+            new_edges = [(i, j + n2 - n1, w) for (i, j, w) in edges]
+            return n2, n2, new_edges
 
     def solve(self):
         self.y = [0] * self.n 
@@ -98,7 +106,7 @@ class HungarianAlgorithm():
         vs = [j]
         while self.par[j] != j:
             j = self.par[j] 
-            vs.append(self.par[j])
+            vs.append(j)
         vs = vs[::-1]
         for i in range(len(vs)-1):
             if i % 2 == 0:
@@ -108,6 +116,4 @@ class HungarianAlgorithm():
         self.is_in_matching[vs[0]] = self.is_in_matching[vs[-1]] = 1 
 
 
-A = HungarianAlgorithm(3, 3, [(0,3,1), (0,4,2), (1,4,2), (1,5,5), (2,5,3)])
-print(A.solve())
-
+A = HungarianAlgorithm(3, 3, [(0,3,1), (0,4,1), (1,4,1), (2,5,1)])
