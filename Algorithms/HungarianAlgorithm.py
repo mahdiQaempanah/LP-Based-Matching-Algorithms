@@ -1,3 +1,5 @@
+import numpy as np 
+
 class HungarianAlgorithm():
     def __init__(self, n1, n2, edges) -> None:
         n1, n2, edges = HungarianAlgorithm.get_valid_input(n1, n2, edges)
@@ -6,7 +8,7 @@ class HungarianAlgorithm():
         self.n = n1 + n2  
         self.edges = edges.copy()
         self.m = len(edges)
-        self.dist = [[0 for i in range(self.n)] for j in range(self.n)]
+        self.dist = np.zeros((self.n, self.n))
         for e in self.edges:
             self.dist[e[0]][e[1]] = self.dist[e[1]][e[0]] = e[2] 
 
@@ -19,24 +21,25 @@ class HungarianAlgorithm():
             return n2, n2, new_edges
 
     def solve(self):
-        self.y = [0] * self.n 
+        self.y = np.zeros((self.n), dtype=np.int64) 
         for i in range(self.n1):
-            self.y[i] = max(self.dist[i])+1
+            self.y[i] = np.max(self.dist[i])+1
 
-        self.M = [[0 for i in range(self.n)] for j in range(self.n)]
-        self.is_in_matching = [0] * self.n
-        for i in range(self.n1):
+        self.M = np.zeros((self.n, self.n), dtype=np.int8)
+        self.matching_size = 0 
+        self.is_in_matching = np.zeros((self.n), dtype=np.int8) 
+
+        while self.matching_size < self.n1:
             self.start_round()
         answer = 0
         for i in range(self.n1):
-            for j in range(self.n):
+            for j in range(self.n1, self.n):
                 if self.M[i][j]:
                     answer += self.dist[i][j]
-        return answer
+        return round(answer)
 
 
     def start_round(self):
-        pass
         self.adj_out = [[] for j in range(self.n)]
         self.candidate_adj_out = [[] for j in range(self.n)]
         for i in range(self.n1):
@@ -58,7 +61,7 @@ class HungarianAlgorithm():
         for i in range(self.n1):
             self.candidate_adj_out[i].sort(key=lambda x: x[1], reverse=True)
         
-        self.par = [-1] * self.n
+        self.par = -1*np.ones((self.n), dtype=np.int32)
         for i in range(self.n1):
             if not self.is_in_matching[i]:
                 if self.par[i] == -1:
@@ -103,6 +106,7 @@ class HungarianAlgorithm():
         return 0 
 
     def change_mathcing(self, j):
+        self.matching_size += 1
         vs = [j]
         while self.par[j] != j:
             j = self.par[j] 
@@ -116,4 +120,17 @@ class HungarianAlgorithm():
         self.is_in_matching[vs[0]] = self.is_in_matching[vs[-1]] = 1 
 
 
-A = HungarianAlgorithm(3, 3, [(0,3,1), (0,4,1), (1,4,1), (2,5,1)])
+
+# n1, n2, m = map(int, input().split())
+# edges = []
+# for _ in range(m):
+#     i, j = map(int, input().split())
+#     edges.append((i,n1+j,1))
+# A = HungarianAlgorithm(n1, n2, edges)
+# print(A.solve())
+
+
+# A = HungarianAlgorithm(3, 3, [(0,3,1), (0,4,1), (1,4,1), (2,5,1)])
+# print(A.solve())
+        
+

@@ -33,7 +33,9 @@ class MultiplicativeAuction():
             self.Q[self.edges[edge_id][0]].append((i, edge_id))
 
         for i in range(self.n1):
-            self.matchr(i)
+            po = i
+            while po != -1:
+                po = self.matchr(po)
         return self.get_answer()
 
     def matchr(self, i):
@@ -48,12 +50,12 @@ class MultiplicativeAuction():
                 self.y[u_] += self.epsilon*w_
                 if self.matched_to[u_] == -1:
                     self.matched_to[u_] = v_
-                    break 
+                    return -1 
                 else: 
                     previous = self.matched_to[u_]
                     self.matched_to[u_] = v_
-                    self.matchr(previous)
-                    break 
+                    return previous
+        return -1 
 
     @staticmethod
     def RadixSort(L): #sort elements by first value
@@ -78,11 +80,11 @@ class MultiplicativeAuction():
             if self.matched_to[j] == i and help[j] == w:
                 answer.append((i,j,w))
                 help[j] = -1
-        return sum([i[2] for i in answer])*(self.w_max*self.main_epsilon/self.n)
+        return round(sum([i[2] for i in answer])*(self.w_max*self.main_epsilon/self.n))
 
 
 A = MultiplicativeAuction(1, 2, [(0,1,1), (0,2,1)])
-
+# print(A.solve(0.5))
 
 
 
