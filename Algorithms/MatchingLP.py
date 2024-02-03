@@ -22,7 +22,7 @@ class MatchingLP:
             constraints.append(sum(x[edge_id] for edge_id in vertex_edges[v]) <= 1)
         constraints.append(x >= 0)
         problem = cp.Problem(objective, constraints)
-        problem.solve()
+        problem.solve(solver=cp.ECOS)
         return round(problem.value)
 
 

@@ -45,21 +45,15 @@ class PathGrowing:
                     # go to the adjacent vertex
                     u, v, _ = self.edges[heavy_edge]
                     x = u + v - x
-            first_weight = 0
-            second_weight = 0
-            for edge in first_match:
-                u, v, w = self.edges[edge]
-                first_weight += w
-            for edge in second_match:
-                u, v, w = self.edges[edge]
-                second_weight += w
+        first_weight = 0
+        second_weight = 0
+        for edge in first_match:
+            u, v, w = self.edges[edge]
+            first_weight += w
+        for edge in second_match:
+            u, v, w = self.edges[edge]
+            second_weight += w
 
-            return max(first_weight, second_weight)
+        return max(first_weight, second_weight)
 
-
-
-
-A = PathGrowing(6, [(0,3,1), (0,4,2), (1,4,2), (1,5,5), (2,5,3)])
-print(A.solve())
-exit(0)
 

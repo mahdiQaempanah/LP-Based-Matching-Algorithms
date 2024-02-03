@@ -5,12 +5,20 @@ from enum import Enum
 import sys 
 
 class TestType(Enum):
-    CS = 1
-    CD = 2
-    WSL = 3
-    WSH = 4
-    WDL = 5
-    WDH = 6
+    CS = 'cd'
+    CD = 'cd'
+    WSL = 'wsl'
+    WSH = 'wsh'
+    WDL = 'wdl'
+    WDH = 'wdh'
+
+class RealDataTestType(Enum):
+    ACTMOOC = 'ActMooc'
+    DBLP = 'DBLP'
+    EMAILEUCORE = 'EmailEUCore'
+    MOVIELENS = 'Movielens'
+    WIKIVOTE = 'WikiVote'
+
 
 class TestGenerator:
     
@@ -22,6 +30,12 @@ class TestGenerator:
                   TestType.WDL: '../Tests/wdl/',
                   TestType.WDH: '../Tests/wdh/'}
     
+    read_data_tests_path = {
+                  RealDataTestType.ACTMOOC: '../Tests/RealData/ActMooc/',
+                  RealDataTestType.DBLP: '../Tests/RealData/DBLP/',
+                  RealDataTestType.EMAILEUCORE: '../Tests/RealData/EmailEUCore/', 
+                  RealDataTestType.MOVIELENS: '../Tests/RealData/Movielens/',
+                  RealDataTestType.WIKIVOTE: '../Tests/RealData/WikiVote/'}
 
     def __init__(self) -> None:
         pass 
@@ -183,13 +197,27 @@ class TestGenerator:
             test = {'n1':n1, 'n2':n2, 'm':m, 'n':n1+n2, 'edges':edges}
         return test
 
+    @staticmethod
+    def get_real_data_test(test_type):
+        test = {}
+        with open(f'{TestGenerator.read_data_tests_path[test_type]}/v.txt', 'r') as f:
+            txt = f.read()
+            txt_split = txt.split('\n')
+            n1n2m , edges_str = txt_split[0], txt_split[1:]
+            n1, n2, m = map(int, n1n2m.split())
+            edges = []
+            for s in edges_str:
+                i, j, w = map(int, s.split())
+                edges.append((i, j, w))
+            test = {'n1':n1, 'n2':n2, 'm':m, 'n':n1+n2, 'edges':edges}
+        return test
+
 
 if len(sys.argv) > 1 and sys.argv[1] == 'mt':
-    t = 5
-    casual_test = 15 
+    t = 2
+    casual_test = 2 
     for test_type in TestType:
         TestGenerator.generate(test_type, t, casual_test)
-
 
 
 

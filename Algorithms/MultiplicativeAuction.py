@@ -8,13 +8,13 @@ class MultiplicativeAuction():
         self.main_edges = edges.copy()
         self.m = len(edges)
 
-    def solve(self, epsilon):
+    def solve(self, epsilon=0.5):
         self.main_epsilon = epsilon
         self.w_max = max([edge[2] for edge in self.main_edges])
         self.edges = [edge for edge in self.main_edges if edge[2] >= self.w_max*epsilon/self.n]
         self.edges = [(i, j, w/(self.w_max*epsilon/self.n)) for (i,j,w) in self.edges]
 
-        self.epsilon = 2 / math.ceil(2/(epsilon/2))
+        self.epsilon = 2 / math.ceil(2/(epsilon))
 
         self.y = [0] * self.n
         self.util = [0] * self.m
