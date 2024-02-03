@@ -213,11 +213,11 @@ class TestGenerator:
         return test
 
 
-if len(sys.argv) > 1 and sys.argv[1] == 'mt':
-    t = 2
-    casual_test = 2 
-    for test_type in TestType:
-        TestGenerator.generate(test_type, t, casual_test)
+# if len(sys.argv) > 1 and sys.argv[1] == 'mt':
+#     t = 2
+#     casual_test = 2 
+#     for test_type in TestType:
+#         TestGenerator.generate(test_type, t, casual_test)
 
 
 
