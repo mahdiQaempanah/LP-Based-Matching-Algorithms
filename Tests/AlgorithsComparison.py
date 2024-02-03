@@ -32,8 +32,17 @@ def advanced_comparison():
     t, casual_t = 5, 10
     time_threshold = 20
     datas = []
+    with open('./result.txt', 'r') as f:
+        txt = f.read()
+        try: 
+            datas = json.loads(txt)
+        except Exception as e:
+            return e
+    
     for test_type in TestType:
         for i in range(1, t+1):
+            if len([1 for x in datas if x['test'] == f'{test_type.value}_t{i}']) > 0:
+                continue 
             print(f'{test_type}: {i}')
             test = TestGenerator.get_test(test_type, i)
             solver = MatchingLP(test['n'], test['edges']); result_matchingLp = get_solver_results(solver, time_threshold)
@@ -63,6 +72,8 @@ def advanced_comparison():
             save_data(datas)
 
         for i in range(1, casual_t+1):
+            if len([1 for x in datas if x['test']==f'{test_type.value}_ct{i}']) > 0:
+                continue 
             print(f'{test_type}: casual{i}')
             test = TestGenerator.get_casual_test(test_type, i)
             solver = MatchingLP(test['n'], test['edges']); result_matchingLp = get_solver_results(solver, time_threshold)
@@ -93,6 +104,8 @@ def advanced_comparison():
 
     
     for test_type in RealDataTestType:
+        if len([1 for x in datas if x['test']==test_type.value]) > 0:
+                continue 
         print(f'{test_type}:')
         test = TestGenerator.get_real_data_test(test_type)
         solver = MatchingLP(test['n'], test['edges']); result_matchingLp = get_solver_results(solver, time_threshold)
@@ -127,6 +140,8 @@ def save_data(datas):
     new_arrange = dict([(key,[data[key] for data in datas]) for key in columns])
     df = pd.DataFrame(new_arrange)
     df.to_csv('./out.csv')
+    with open('./result.txt','w') as f:
+        f.write(json.dumps(datas))
 
 def get_solver_results(solver, threshold):
     answer = dict()
