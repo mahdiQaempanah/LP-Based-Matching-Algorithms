@@ -28,7 +28,9 @@ class MultiplicativeAuction():
                 j = coff*(self.epsilon/2) + self.epsilon
                 i = math.floor(math.log(j*w, 1+self.epsilon))
                 L.append((i, id))
-        L = MultiplicativeAuction.RadixSort(L)
+        if len(L)==0:
+            return 0 
+        L = MultiplicativeAuction.CountingSort(L)
         for i, edge_id in L:
             self.Q[self.edges[edge_id][0]].append((i, edge_id))
 
@@ -58,7 +60,7 @@ class MultiplicativeAuction():
         return -1 
 
     @staticmethod
-    def RadixSort(L): #sort elements by first value
+    def CountingSort(L): #sort elements by first value
         mx = max([l[0] for l in L])
         mn = min([l[0] for l in L])
         parts = dict([(i,[]) for i in range(mn, mx+1)])

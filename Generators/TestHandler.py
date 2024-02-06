@@ -5,7 +5,7 @@ from enum import Enum
 import sys 
 
 class TestType(Enum):
-    CS = 'cd'
+    CS = 'cs'
     CD = 'cd'
     WSL = 'wsl'
     WSH = 'wsh'
